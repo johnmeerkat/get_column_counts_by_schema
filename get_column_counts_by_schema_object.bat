@@ -16,6 +16,7 @@ rem ****************************
 :Configuration
 title configuration
 echo configuration...
+
 set home_drive=C:
 set home_directory=%working_drive%\Tech_Notes\Postgres_Tech_Notes\get_column_counts_by_schema_object
 set working_drive=C:
@@ -24,23 +25,25 @@ set PGPASSWORD=!9Sparrowdrive!
 set psqlm="C:\Program Files\PostgreSQL\14\bin\psql.exe"
 set psqlconn=%psqlm% -h localhost -U postgres -d Icasework -Atq --csv
 set ps1=C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -nologo
-
-set psleep=%ps1% sleep
 set config_file=objects_to_process.txt
-set/a cleanse_config_file=0
-set/a pattern_line_counter=0
-set/a avg_processing_time=0
 
-for /f "tokens=1-3 delims=/ " %%a in  ('date/t') do (set day=%%a&& set month=%%b&& set year=%%c)
-for /f "tokens=1-3 delims=: " %%d in  ('%ps1% get-date -Format ^"HH:mm:ss ^"') do (set hours=%%d&& set minutes=%%e&& set seconds=%%f)
-
-rem ****************************
-rem *** Startup              ***
-rem ****************************
+rem ***********************************
+rem *** Startup                     ***
+rem *** Configure global variables  ***
+rem *** and change directory to the ***
+rem *** working directory           ***
+rem ***********************************
 :Startup
 title startup
 echo startup...
+set/a cleanse_config_file=0
+set/a pattern_line_counter=0
+set/a avg_processing_time=0
+set psleep=%ps1% sleep
 %psleep% 1
+
+for /f "tokens=1-3 delims=/ " %%a in  ('date/t') do (set day=%%a&& set month=%%b&& set year=%%c)
+for /f "tokens=1-3 delims=: " %%d in  ('%ps1% get-date -Format ^"HH:mm:ss ^"') do (set hours=%%d&& set minutes=%%e&& set seconds=%%f)
 
 echo start_date_time : %year%_%month%_%day%_%hours%_%minutes%_%seconds%
 
@@ -110,12 +113,11 @@ echo ) >> pattern_counter_in_file.ps1
 echo (select-string -Path $filename -Pattern $match1 -AllMatches).Matches.count; >> pattern_counter_in_file.ps1
 
 
-rem *************************************
-rem *** if the config_file            ***
-rem *** objects_to_process.txt        ***  
-rem *** is defined then cleanse it to ***
-rem *** objects_to_process.tmp        ***
-rem *************************************
+rem **********************************
+rem *** if the config_file is      ***
+rem *** defined then cleanse it    ***
+rem *** to objects_to_process.tmp  ***
+rem **********************************
 :cleanse_config_file
 title cleanse_config_file
 echo cleanse_config_file
@@ -137,12 +139,13 @@ echo call_schema_script...
 
 call :create_schema_script
 
-rem *******************************
-rem *** run to schema script    ***
-rem *** exclude extra schema    ***
-rem *** such as                 ***
-rem *** information_schema      ***
-rem *******************************
+rem **********************************
+rem *** run the schema script      ***
+rem *** exclude extra schema       ***
+rem *** such as information_schema *** 
+rem *** and produce an output file ***
+rem *** named schema.txt           ***
+rem **********************************
 :run_schema_script
 echo. > schema.txt
 del /f schema.txt
@@ -244,9 +247,9 @@ cd %home_directory%
 goto master_exit
 rem +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 rem +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-rem ++++++++++++++++++++++++++++++++++++++++++++
-rem +++ Subroutine Section Start            ++++
-rem ++++++++++++++++++++++++++++++++++++++++++++
+rem +++++++++++++++++++++++++++++++++++++++++++++++
+rem +++        Subroutine Section Start        ++++
+rem +++++++++++++++++++++++++++++++++++++++++++++++
 rem ++++++++++++++++++++++++++++++++++
 rem +++ create_schema_script start +++
 rem +++ exclude schema such as     +++
@@ -301,7 +304,7 @@ rem +++++++++++++++++++++++++++++++++++++++++
 rem +++++++++++++++++++++++++++++++++++++++++++++++++++++++
 rem +++++++++++++++++++++++++++++++++++++++++
 rem +++ There is a config file to         +++
-rem +++ process run this against          +++
+rem +++ process so run this against       +++
 rem +++ each schema                       +++
 rem +++++++++++++++++++++++++++++++++++++++++
 :process_config_for_each_schema
@@ -402,7 +405,6 @@ echo please allow %nominal_processing_time% minutes for processing.
 
 %psqlconn% -f %schema%_%object%_m.sql 
 
-
 copy /b /y section_csv_*.csv %schema%_%object%_m.csv > nul
 
 echo schema,object,column name,distinct_counts > %schema%_%object%_1.csv
@@ -453,9 +455,9 @@ rem +++++++++++++++++++++++++++++++++++++++++
 rem +++ There is a config file to         +++
 rem +++ process so run it here end        +++
 rem +++++++++++++++++++++++++++++++++++++++++
-rem ++++++++++++++++++++++++++++++++++++++++++++
-rem +++ Subroutine Section End              ++++
-rem ++++++++++++++++++++++++++++++++++++++++++++
+rem +++++++++++++++++++++++++++++++++++++++++++++++
+rem +++        Subroutine Section Start End    ++++
+rem +++++++++++++++++++++++++++++++++++++++++++++++
 rem +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 rem +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 rem ****************************
@@ -467,6 +469,3 @@ echo master_exit...
 set home_drive=
 set home_directory=
 rem exit 0
-
-
-
