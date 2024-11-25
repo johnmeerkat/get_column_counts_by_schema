@@ -1,10 +1,10 @@
 # Get Column Counts by Schema Object
-The main batch script is named [get_column_counts_by_schema_object.bat].
+The main batch script is named get_column_counts_by_schema_object.bat.
 This batch script will create a set of csv files from a set of schema and set of object names.
 # Usage
 Step 1 - create a file named [objects.txt] and add the tables or views required for column processing on a newline
 Step 2 - edit the very top configuration section of the batch file
-         get_column_counts_by_schema_object.bat for the following setting
+         get_column_counts_by_schema_object.bat for the following settings :-
 
         home_drive          - the home drive from which the script is run
         home_directory      - the home directory from which the script is run
