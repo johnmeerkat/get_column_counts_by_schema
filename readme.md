@@ -1,4 +1,4 @@
-# Get Column Counts by schema object
+# Get Column Counts by Schema Object
 The main batch script is named [get_column_counts_by_schema_object.bat].
 This batch script will create a set of csv files from a set of schema and set of object names.
 # Usage
