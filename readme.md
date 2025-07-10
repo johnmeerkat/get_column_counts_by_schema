@@ -27,4 +27,4 @@ Step 3 - run the batch script get_column_counts_by_schema_object.bat
 
  # Notes
    Author : John Mee
-   Email  : john.mee@civica.co.uk
+   Email  : john.mee@tygerman.co.uk
